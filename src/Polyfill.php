@@ -11,6 +11,7 @@
 
 namespace Javanile\Imap2;
 
+use stdClass;
 use ZBateson\MailMimeParser\Message;
 use ZBateson\MailMimeParser\Header\HeaderConsts;
 
@@ -23,7 +24,43 @@ class Polyfill
 
     public static function mimeHeaderDecode($string)
     {
-        return $string;
+        $decodedText = '';
+        $elements = [];
+
+        $parts = preg_split('/\?/', $string);
+        $numParts = count($parts);
+
+        for ($i = 0; $i < $numParts; $i += 4) {
+            $charset = $parts[$i + 1];
+            $encoding = $parts[$i + 2];
+            $string = $parts[$i + 3];
+
+            if ($charset == 'default') {
+                $charset = 'ISO-8859-1'; // Установите кодировку по умолчанию
+            }
+
+            if ($encoding == 'B') {
+                // Декодируем строку, если кодировка - base64
+                $decodedText .= base64_decode($string);
+            } elseif ($encoding == 'Q') {
+                // Декодируем строку, если кодировка - quoted-printable
+                $decodedText .= quoted_printable_decode(str_replace('_', ' ', $string));
+            }
+
+            if ($i < $numParts - 4) {
+                // Создаем объект и добавляем его в массив
+                $element = new stdClass();
+                $element->charset = $charset;
+                $element->encoding = $encoding;
+                $element->text = $decodedText;
+                $elements[] = $element;
+
+                // Сбрасываем значение decodedText
+                $decodedText = '';
+            }
+        }
+
+        return $elements;
     }
 
     public static function mutf7ToUtf8($string)
