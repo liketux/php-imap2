@@ -29,7 +29,13 @@ class Polyfill
 
     public static function mimeHeaderDecode($string)
     {
-        $decodedText = '';
+        $element = new stdClass();
+        $element->charset = 'utf8';
+        $element->encoding = '';
+        $element->text = $string;
+        return[ $element ];
+
+        /*$decodedText = '';
         $elements = [];
 
         $parts = preg_split('/\?/', $string);
@@ -65,7 +71,7 @@ class Polyfill
             }
         }
 
-        return $elements;
+        return $elements;*/
     }
 
     public static function mutf7ToUtf8($string)
