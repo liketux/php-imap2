@@ -339,7 +339,7 @@ class Message
             'RFC822.HEADER'
         ]);
 
-        if ($sequence != '*' && count($messages) < Functions::expectedNumberOfMessages($sequence)) {
+        if (($sequence != '*' && substr($sequence, -1) != '*') && count($messages) < Functions::expectedNumberOfMessages($sequence)) {
             return [];
         }
 
