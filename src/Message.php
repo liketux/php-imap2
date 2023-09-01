@@ -165,6 +165,10 @@ class Message
 
         $messages = $client->fetch($imap->getMailboxName(), $messageNum, $isUid, ['BODY[TEXT]']);
 
+        if ($isUid && is_array($messages)) {
+            $messages = Functions::keyBy('uid', $messages);
+        }
+
         return $messages[$messageNum]->bodypart['TEXT'];
     }
 
@@ -178,12 +182,16 @@ class Message
         #$client->setDebug(true);
 
         $isUid = boolval($flags & FT_UID);
-        $messages = $client->fetch($imap->getMailboxName(), $messageNum, $isUid, ['BODY['.$section.']']);
+        $messages = $client->fetch($imap->getMailboxName(), $messageNum, $isUid, ['BODY.PEEK['.$section.']']);
 
         if (empty($messages)) {
             trigger_error(Errors::badMessageNumber(debug_backtrace(), 1), E_USER_WARNING);
 
             return false;
+        }
+
+        if ($isUid && is_array($messages)) {
+            $messages = Functions::keyBy('uid', $messages);
         }
 
         if ($section) {
@@ -215,6 +223,10 @@ class Message
 
         if (empty($messages)) {
             return "";
+        }
+
+        if ($isUid && is_array($messages)) {
+            $messages = Functions::keyBy('uid', $messages);
         }
 
         if ($section && isset($messages[$messageNum]->bodypart[$sectionKey])) {
@@ -262,7 +274,7 @@ class Message
         }
     }
 
-    public static function bodyStruct($imap, $messageNum, $flags = 0)
+    public static function bodyStruct($imap, $messageNum, $section)
     {
         if (!is_a($imap, Connection::class)) {
             return Errors::invalidImapConnection(debug_backtrace(), 1, false);
@@ -433,7 +445,7 @@ class Message
      * @param $flag
      * @param $options
      *
-     * @return bool|void
+     * @return bool
      */
     public static function setFlagFull($imap, $sequence, $flag, $options = 0)
     {
@@ -454,9 +466,7 @@ class Message
             $sequence = implode(',', $uid);
         }
 
-        $client->flag($imap->getMailboxName(), $sequence, strtoupper(substr($flag, 1)));
-
-        return false;
+        return $client->flag($imap->getMailboxName(), $sequence, strtoupper(substr($flag, 1)));
     }
 
     /**

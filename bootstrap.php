@@ -855,6 +855,9 @@ if (!function_exists('imap2_headerinfo')) {
     function imap2_headerinfo($imap, $messageNum, $fromLength = 0, $subjectLength = 0, $defaultHost = null)
     {
         if (IMAP2_RETROFIT_MODE && is_resource($imap) && get_resource_type($imap) == 'imap') {
+
+            if (PHP_VERSION_ID >= 80000) return imap_headerinfo($imap, $messageNum, $fromLength, $subjectLength);
+
             return imap_headerinfo($imap, $messageNum, $fromLength, $subjectLength, $defaultHost);
         }
 
