@@ -22,6 +22,11 @@ class Polyfill
         return $string;
     }
 
+    public static function base64($string)
+    {
+        return base64_encode($string);
+    }
+
     public static function mimeHeaderDecode($string)
     {
         $decodedText = '';
