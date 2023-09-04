@@ -241,8 +241,8 @@ class Message
         if (is_a($imap, Connection::class)) {
             $client = $imap->getClient();
             #$client->setDebug(true);
-
-            $messages = $client->fetch($imap->getMailboxName(), $messageNum, false, ['BODY['.$section.']']);
+            $isUid = boolval($flags & FT_UID);
+            $messages = $client->fetch($imap->getMailboxName(), $messageNum, $isUid, ['BODY['.$section.']']);
 
             $body = $section ? $messages[$messageNum]->bodypart[$section] : $messages[$messageNum]->body;
 
@@ -329,7 +329,9 @@ class Message
         $client = $imap->getClient();
         #$client->setDebug(true);
 
-        $messages = $client->fetch($imap->getMailboxName(), $sequence, false, [
+        $isUid = boolval($flags & FT_UID);
+
+        $messages = $client->fetch($imap->getMailboxName(), $sequence, $isUid, [
             'BODY[HEADER.FIELDS (SUBJECT FROM TO CC REPLYTO MESSAGEID DATE SIZE REFERENCES)]',
             'UID',
             'FLAGS',
@@ -397,7 +399,9 @@ class Message
 
         $client = $imap->getClient();
 
-        $messages = $client->fetch($imap->getMailboxName(), $messageNums, false, ['UID']);
+        $isUid = boolval($flags & FT_UID);
+
+        $messages = $client->fetch($imap->getMailboxName(), $messageNums, $isUid, ['UID']);
 
         $uid = [];
         foreach ($messages as $message) {
@@ -415,7 +419,9 @@ class Message
             $client = $imap->getClient();
             #$client->setDebug(true);
 
-            $messages = $client->fetch($imap->getMailboxName(), $messageNums, false, ['UID']);
+            $isUid = boolval($flags & FT_UID);
+
+            $messages = $client->fetch($imap->getMailboxName(), $messageNums, $isUid, ['UID']);
             foreach ($messages as $message) {
                 $client->unflag($imap->getMailboxName(), $message->uid, $client->flags['DELETED']);
             }
