@@ -369,7 +369,7 @@ class Message
                 'udate' => strtotime($message->internaldate),
             ];
 
-            if (empty($messageEntry->subject)) {
+            /*if (empty($messageEntry->subject)) {
                 unset($messageEntry->subject);
             }
 
@@ -383,7 +383,7 @@ class Message
 
             if (empty($messageEntry->to)) {
                 unset($messageEntry->to);
-            }
+            }*/
 
             $overview[] = $messageEntry;
         }

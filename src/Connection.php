@@ -67,7 +67,7 @@ class Connection
      * @param int $retries
      * @param array $options
      *
-     * @return void
+     * @return Connection|false
      */
     public static function open($mailbox, $user, $password, $flags = 0, $retries = 0, $options = [])
     {
