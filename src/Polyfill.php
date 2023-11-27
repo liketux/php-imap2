@@ -110,6 +110,7 @@ class Polyfill
 
         $hasReplyTo = $message->getHeader(HeaderConsts::REPLY_TO) !== null;
         $hasSender = $message->getHeader(HeaderConsts::SENDER) !== null;
+        $hasTo = $message->getHeader(HeaderConsts::TO) !== null;
 
         return (object) [
             'date' => $date,
@@ -118,7 +119,7 @@ class Polyfill
             'Subject' => $subject,
             'message_id' => '<'.$message->getHeaderValue(HeaderConsts::MESSAGE_ID).'>',
             'toaddress' => $message->getHeaderValue(HeaderConsts::TO),
-            'to' => Functions::getAddressObjectList($message->getHeader(HeaderConsts::TO)->getAddresses()),
+            'to' => Functions::getAddressObjectList($message->getHeader($hasTo ? HeaderConsts::TO : HeaderConsts::FROM)->getAddresses()),
             'fromaddress' => $message->getHeaderValue(HeaderConsts::FROM),
             'from' => Functions::getAddressObjectList($message->getHeader(HeaderConsts::FROM)->getAddresses()),
             'reply_toaddress' => $message->getHeaderValue($hasReplyTo ? HeaderConsts::REPLY_TO : HeaderConsts::FROM),
