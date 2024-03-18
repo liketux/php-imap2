@@ -118,7 +118,7 @@ class Polyfill
             'subject' => $subject,
             'Subject' => $subject,
             'message_id' => '<'.$message->getHeaderValue(HeaderConsts::MESSAGE_ID).'>',
-            'toaddress' => $message->getHeaderValue(HeaderConsts::TO),
+            'toaddress' => $message->getHeaderValue($hasTo ? HeaderConsts::TO : HeaderConsts::FROM),
             'to' => Functions::getAddressObjectList($message->getHeader($hasTo ? HeaderConsts::TO : HeaderConsts::FROM)->getAddresses()),
             'fromaddress' => $message->getHeaderValue(HeaderConsts::FROM),
             'from' => Functions::getAddressObjectList($message->getHeader(HeaderConsts::FROM)->getAddresses()),
