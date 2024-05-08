@@ -1,3 +1,12 @@
+Hello liketux
+Sorry to write you here but I can't find where to contact you since the issues module is not enabled....
+Very nice your work with the javanile/php-imap2 project.
+I see that you have integrated many PRs, even one of mine.
+I wanted to ask you if you plan to add this fork to the composer to make it easier to use.
+Thanks, best regards
+Gabriel ( gabriel.tandil@gmail.com )
+
+
 <div align="center">
 
 # ⭐ Give me a star, please! ⭐
